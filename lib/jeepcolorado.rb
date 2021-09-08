@@ -19,7 +19,21 @@ module Jeepcolorado
   end
   class F1SalesCustom::Email::Parser
     def parse
-      # ...
+      parsed_email = @email.body.colons_to_hash
+      source = F1SalesCustom::Email::Source.all[0]
+
+      {
+        source: {
+          name: source[:name]
+        },
+        customer: {
+          name: parsed_email['nome'],
+          phone: parsed_email['telefone'].tr('^0-9', ''),
+          email: parsed_email['email']
+        },
+        product: parsed_email['veculo'],
+        message: parsed_email['mensagem']
+      }
     end
   end
 end
